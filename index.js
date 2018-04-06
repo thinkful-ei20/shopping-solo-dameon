@@ -10,23 +10,20 @@ const STORE = {
   checked : false,
 };
 
-function renderUnchecked (arr){
-  let shoppingListItemsString = generateShoppingItemsString(arr);
 
-  // insert that HTML into the DOM
-  $('.js-shopping-list').html(shoppingListItemsString);
-}
-function searchForUnchecked(){
-  return STORE.items.filter(item => item['checked'] === false);
-}
 
 function toggleCheckedItems (){
   $('.toggleButton').on('click', event => {
-    
-    let uncheckedItems = searchForUnchecked();
-    console.log(uncheckedItems);
-    renderUnchecked(uncheckedItems);
-    console.log('hi');
+
+    if (!STORE.checked){
+      STORE.checked = true;
+    }
+    else {
+      STORE.checked = false;
+     
+    }
+    renderShoppingList();
+
   });
 }
 
@@ -91,11 +88,24 @@ function renderShoppingList() {
   // render the shopping list in the DOM
   console.log('`renderShoppingList` ran');
   const shoppingListItemsString = generateShoppingItemsString(STORE.items);
+  if(!STORE.checked){
+  // insert that HTML into the DOM
+  $('.js-shopping-list').html(shoppingListItemsString);
+  } else {
+    let newArr = searchForUnchecked();
+    let string = generateShoppingItemsString(newArr);
+    $('.js-shopping-list').html(string);
+  }
+}
+function renderUnchecked (arr){
+  let shoppingListItemsString = generateShoppingItemsString(arr);
 
   // insert that HTML into the DOM
   $('.js-shopping-list').html(shoppingListItemsString);
 }
-
+function searchForUnchecked(){
+  return STORE.items.filter(item => item['checked'] === false);
+}
 
 function addItemToShoppingList(itemName) {
   console.log(`Adding "${itemName}" to shopping list`);
