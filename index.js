@@ -11,26 +11,45 @@ const STORE = {
 };
 
 
+//editing a store name and rerendering
+
+
+
+
+
+
 
 function toggleCheckedItems (){
   $('.toggleButton').on('click', event => {
-
     if (!STORE.checked){
       STORE.checked = true;
-    }
-    else {
+    } else {
       STORE.checked = false;
-     
     }
     renderShoppingList();
-
   });
 }
 
 
+function searchedForItems(){
+  
+  $('#js-shopping-search-form').submit(function(event) {
+    event.preventDefault();
+      
+    let searchTerm = $('.js-shopping-list-search').val();
+    $('.js-shopping-list-search').val('');
+     let newArr = STORE.items.filter(item => item['name'] === searchTerm);
+    //renderShoppingList();
+    let string = generateShoppingItemsString(newArr);
+    renderSearchedForItems(string);
+  });
+}
 
 
-
+function renderSearchedForItems(data) {
+ 
+  $('.js-shopping-list').html(data);
+}
 
 
 
@@ -70,6 +89,9 @@ function generateItemElement(item, itemIndex, template) {
         <button class="shopping-item-delete js-item-delete">
             <span class="button-label">delete</span>
         </button>
+        <button class="shopping-item-edit js-item-edit">
+            <span class="button-label">edit</span>
+        </button>
       </div>
     </li>`;
 }
@@ -90,7 +112,7 @@ function renderShoppingList() {
   const shoppingListItemsString = generateShoppingItemsString(STORE.items);
   if(!STORE.checked){
   // insert that HTML into the DOM
-  $('.js-shopping-list').html(shoppingListItemsString);
+    $('.js-shopping-list').html(shoppingListItemsString);
   } else {
     let newArr = searchForUnchecked();
     let string = generateShoppingItemsString(newArr);
@@ -103,6 +125,7 @@ function renderUnchecked (arr){
   // insert that HTML into the DOM
   $('.js-shopping-list').html(shoppingListItemsString);
 }
+
 function searchForUnchecked(){
   return STORE.items.filter(item => item['checked'] === false);
 }
@@ -171,6 +194,7 @@ function handleShoppingList() {
   handleItemCheckClicked();
   handleDeleteItemClicked();
   toggleCheckedItems();
+  searchedForItems();
 }
 
 // when the page loads, call `handleShoppingList`
