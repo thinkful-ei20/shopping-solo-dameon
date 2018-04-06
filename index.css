@@ -49,3 +49,8 @@ button:hover {
 .shopping-item__checked {
   text-decoration: line-through;
 }
+
+form {
+  margin: 2px;
+  padding : 2px  
+}
