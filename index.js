@@ -44,7 +44,6 @@ function generateShoppingItemsString(shoppingList) {
 
 //listOfItems needs to be an array
 function renderShoppingList(arrayOfItems) {
-  //   // render the shopping list in the DOM
   let shoppingListItemsString = generateShoppingItemsString(arrayOfItems);
   $('.js-shopping-list').html(shoppingListItemsString);
 }
@@ -63,6 +62,7 @@ function handleNewItemSubmit() {
 
 function addItemToShoppingList(itemName) {
   STORE.items.push({name: itemName, checked: false});
+  currentDisplayItems = STORE.items;
 }
 
 // Handles the check button
@@ -71,12 +71,13 @@ function handleItemCheckClicked() {
     let itemIndex = getItemIndexFromElement(event.currentTarget);
     toggleCheckedForListItem(itemIndex);
     // currentDisplayItems = STORE.items;
+    console.log(itemIndex);
     renderShoppingList(currentDisplayItems);
   });
 }
 
 function toggleCheckedForListItem(itemIndex) {
-  STORE.items[itemIndex].checked = !STORE.items[itemIndex].checked;
+ currentDisplayItems[itemIndex].checked = !currentDisplayItems[itemIndex].checked;
 }
 
 
@@ -86,11 +87,35 @@ function handleDeleteItemClicked() {
     let itemIndex = getItemIndexFromElement(event.currentTarget);
     STORE.items.splice(itemIndex,1);
     $(this).closest('li').remove();
-
     renderShoppingList(currentDisplayItems);
   });
 }
 
+//Handles the search list
+function searchedForItems(){
+  $('#js-shopping-search-form').submit(function(event) {
+    event.preventDefault();
+    let searchTerm = $('.js-shopping-list-search').val();
+    let newArr = STORE.items.filter(item => item['name'] === searchTerm);
+    currentDisplayItems = newArr;
+    $('.js-shopping-list-search').val('');
+    renderShoppingList(currentDisplayItems);
+  });
+}
+
+//Toggling between checked and unchecked items
+function changeToggleValue(){
+  (!STORE.toggled) ? STORE.toggled = true : STORE.toggled = false;
+}
+
+function toggleCheckedItems (){
+  $('.toggleButton').on('click', event => {
+    (STORE.toggled) ? currentDisplayItems = STORE.items : currentDisplayItems = currentDisplayItems.filter(item => item['checked'] === false);
+    //currentDisplayItems = generateShoppingItemsString(currentDisplayItems);
+    renderShoppingList(currentDisplayItems);
+    changeToggleValue();
+  });
+}
 
 
 //editing a  name and rerendering
@@ -109,30 +134,8 @@ function handleDeleteItemClicked() {
 
 // }
 
-function toggleCheckedItems (){
-  $('.toggleButton').on('click', event => {
-    (!STORE.toggled) ? STORE.toggled = true : STORE.toggled = false;
-  // $('.toggleButton').on('click', event => {
-  //   if (!STORE.toggled){
-  //     STORE.toggled = true;
-  //   } else {
-  //     STORE.toggled = false;
-  //   }
-  //  console.log(STORE.toggled);
-  });
-}
 
 
-function searchedForItems(){
-  $('#js-shopping-search-form').submit(function(event) {
-    event.preventDefault();
-    let searchTerm = $('.js-shopping-list-search').val();
-    let newArr = STORE.items.filter(item => item['name'] === searchTerm);
-    currentDisplayItems = newArr;
-    $('.js-shopping-list-search').val('');
-    renderShoppingList(currentDisplayItems);
-  });
-}
 
 
 // ----this was part of rendering
