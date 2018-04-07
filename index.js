@@ -13,9 +13,19 @@ const STORE = {
 
 //editing a store name and rerendering
 
+function editItem () {
+  $('.js-shopping-list').on('click', '.edit',event => {
+    event.preventDefault();
+    let newName = $('.js-shopping-list-edit').val();
+    console.log(newName);
+    const itemIndex = getItemIndexFromElement(event.currentTarget);
+    STORE.items[itemIndex].name = newName;
+    $('.js-shopping-list-edit').val('');
+    console.log(itemIndex);
+    renderShoppingList();
+  });
 
-
-
+}
 
 
 
@@ -38,7 +48,7 @@ function searchedForItems(){
       
     let searchTerm = $('.js-shopping-list-search').val();
     $('.js-shopping-list-search').val('');
-     let newArr = STORE.items.filter(item => item['name'] === searchTerm);
+    let newArr = STORE.items.filter(item => item['name'] === searchTerm);
     //renderShoppingList();
     let string = generateShoppingItemsString(newArr);
     renderSearchedForItems(string);
@@ -89,9 +99,12 @@ function generateItemElement(item, itemIndex, template) {
         <button class="shopping-item-delete js-item-delete">
             <span class="button-label">delete</span>
         </button>
-        <button class="shopping-item-edit js-item-edit">
-            <span class="button-label">edit</span>
-        </button>
+        <form id="js-shopping-edit-form">
+             <label for="shopping-list-edit">Edit item</label>
+             <input type="text" name="shopping-list-edit" class="js-shopping-list-edit" placeholder="e.g., grapes">
+             <button type="submit" class= 'edit'>Edit</button>
+         </form>
+        
       </div>
     </li>`;
 }
@@ -132,7 +145,7 @@ function searchForUnchecked(){
 
 function addItemToShoppingList(itemName) {
   console.log(`Adding "${itemName}" to shopping list`);
-  STORE.push({name: itemName, checked: false});
+  STORE.items.push({name: itemName, checked: false});
 }
 
 function handleNewItemSubmit() {
@@ -173,7 +186,7 @@ function handleDeleteItemClicked() {
   // this function will be responsible for when users want to delete a shopping list
   $('.js-shopping-list').on('click','.js-item-delete',function(event){
     const itemIndex = getItemIndexFromElement(event.currentTarget);
-    delete STORE[itemIndex];
+    delete STORE.items[itemIndex];
     // STORE.splice(itemIndex,1);
     // $(this).closest("li").remove();
     console.log(STORE);
@@ -195,6 +208,7 @@ function handleShoppingList() {
   handleDeleteItemClicked();
   toggleCheckedItems();
   searchedForItems();
+  editItem();
 }
 
 // when the page loads, call `handleShoppingList`
