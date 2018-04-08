@@ -30,7 +30,11 @@ function generateItemElement(item, itemIndex) {
         <button class="shopping-item-delete js-item-delete">
             <span class="button-label">delete</span>
         </button>
-       
+        <form id="js-shopping-edit-form" class="js-item-index-element" data-item-index="${itemIndex}">
+             <label for="shopping-list-edit">Edit item</label>
+             <input type="text" name="shopping-list-edit" class="js-shopping-list-edit" placeholder="e.g., grapes">
+             <button type="submit" class= 'edit'>Edit</button>
+        </form>
       </div>
     </li>`;
 }
@@ -77,7 +81,7 @@ function handleItemCheckClicked() {
 }
 
 function toggleCheckedForListItem(itemIndex) {
- currentDisplayItems[itemIndex].checked = !currentDisplayItems[itemIndex].checked;
+  currentDisplayItems[itemIndex].checked = !currentDisplayItems[itemIndex].checked;
 }
 
 
@@ -120,19 +124,19 @@ function toggleCheckedItems (){
 
 //editing a  name and rerendering
 
-// function editItem () {
-//   $('.js-shopping-list').on('click', '.edit',function(event) {
-//     event.preventDefault();
-//     let newName = $('.js-shopping-list-edit').val();
-//     console.log(newName);
-//     const itemIndex = getItemIndexFromElement(event.currentTarget);
-//     STORE.items[itemIndex].name = newName;
-//    // $('.js-shopping-list-edit').val('');
-//     //console.log(itemIndex);
-//     renderShoppingList(STORE.items);
-//   });
+function editItem () {
+  $('.js-shopping-list').on('click', '.edit',function(event) {
+    event.preventDefault();
+    let newName = $('.js-shopping-list-edit').val();
+    console.log(newName);
+    // const itemIndex = getItemIndexFromElement(event.currentTarget);
+    // currentDisplayItems[itemIndex].name = newName;
+    // $('.js-shopping-list-edit').val('');
+    //console.log(itemIndex);
+   // renderShoppingList(currentDisplayItems);
+  });
 
-// }
+}
 
 
 
@@ -176,7 +180,7 @@ function handleShoppingList() {
   handleDeleteItemClicked();
   toggleCheckedItems();
   searchedForItems();
-  //editItem();
+  editItem();
 }
 
 // when the page loads, call `handleShoppingList`
